@@ -3,7 +3,17 @@ const pg = require('pg');
 const connectionString = "postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt?ssl=true";
 const express = require("express");
 const bodyParser = require("body-parser");
+//if (process.env.DATABASE_URL) {
+  pg.defaults.ssl = true;
+//}
 
+
+let connString = process.env.DATABASE_URL || 'postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt';
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  "connectionString" : connectionString
+});
 const restService = express();
 
 restService.use(
@@ -37,7 +47,7 @@ function sendCard(req, res){
 	var cardTitle = 'test'
 	var cardSubTitle = 'test'
 	var buttonText = 'button';
-	pg.connect(connectionString, function(err, client, done) {
+	/*pg.connect(connectionString, function(err, client, done) {
 	if(!err){
 	   client.query('SELECT table_schema,table_name FROM information_schema.tables', function(err, result) {
 			done();
@@ -67,7 +77,34 @@ function sendCard(req, res){
 	else{
 		console.error(err);
 	}
-	});
+	});*/
+	pool.connect(function(err, client, done) {
+
+		if (err) {
+			console.error('Error connecting to pg server' + err.stack);
+			callback(err);
+		} else {
+			console.log('Connection established with pg db server');
+
+			client.query("SELECT table_schema,table_name FROM information_schema.tables", (err, res) => {
+
+					if (err) {
+						console.error('Error executing query on pg db' + err.stack);
+						callback(err);
+					} else {
+						console.log('Got query results : ' + res.rows.length);
+
+
+					   async.each(res.rows, function(empRecord) {   
+								console.log(empRecord.table_name);
+						});
+					}
+					client.release();
+
+				});
+		}
+
+	});  
 }
 
 
