@@ -38,8 +38,10 @@ function sendCard(req, res){
 	var cardSubTitle = 'test'
 	var buttonText = 'button';
 	pg.connect(connectionString, function(err, client, done) {
+	if(!err){
 	   client.query('SELECT table_schema,table_name FROM information_schema.tables', function(err, result) {
-			if(err) return console.error(err);
+			done();
+			if(err) console.error(err);
 			console.log(JSON.stringify(result.rows));
 			return res.json({
 				fulfillmentText: cardTitle,
@@ -61,6 +63,10 @@ function sendCard(req, res){
 				source: "webhook-echo-sample"
 			}); 
 	   });
+	}
+	else{
+		console.error(err);
+	}
 	});
 }
 
