@@ -9,10 +9,22 @@ const bodyParser = require("body-parser");
 
 
 let connString = process.env.DATABASE_URL || 'postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt';
-
-const pool = new pg.Pool({
-  "connectionString" : connectionString
-});
+const Pool = require('pg-pool');
+const url = require('url')
+ 
+const params = url.parse(connString);
+const auth = params.auth.split(':');
+ 
+const config = {
+  user: auth[0],
+  password: auth[1],
+  host: params.hostname,
+  port: params.port,
+  database: params.pathname.split('/')[1],
+  ssl: true
+};
+ 
+const pool = new Pool(config);
 const restService = express();
 
 restService.use(
