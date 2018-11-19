@@ -1,6 +1,6 @@
 "use strict";
 const pg = require('pg');
-const connectionString = "postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt";
+const connectionString = "postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt?ssl=true";
 const express = require("express");
 const bodyParser = require("body-parser");
 
