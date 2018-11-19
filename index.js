@@ -89,7 +89,7 @@ function sendCard(req, res){
 		console.error(err);
 	}
 	});*/
-	pool.connect(function(err, client, done) {
+	/*pool.connect(function(err, client, done) {
 
 		if (err) {
 			console.error('Error connecting to pg server' + err.stack);
@@ -115,7 +115,36 @@ function sendCard(req, res){
 				});
 		}
 
-	});  
+	});  */
+	var MongoClient = require('mongodb').MongoClient;
+
+	// Connect to the db
+	MongoClient.connect("mongodb://apachacker:apachacker1@ds111244.mlab.com:11244/apachackathon", function (err, db) {
+	   
+		 if(err) throw err;
+		console.log("Success :)");
+		 //Write databse Insert/Update/Query code here..
+					
+	});
+	return res.json({
+		fulfillmentText: cardTitle,
+		fulfillmentMessages: [
+			{
+			  card: {
+				title: cardTitle,
+				subtitle: cardSubTitle,
+				imageUri: "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+				buttons: [
+				  {
+					text: buttonText,
+					postback: "https://assistant.google.com/"
+				  }
+				]
+			  }
+			}
+		],
+		source: "webhook-echo-sample"
+	});
 }
 
 
