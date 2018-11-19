@@ -1,11 +1,6 @@
 "use strict";
-const { Client } = require('pg');
-
-const client = new Client({
-  connectionString: "postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt",
-  ssl: true,
-});
-
+const pg = require('pg');
+const connectionString = "postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt";
 const express = require("express");
 const bodyParser = require("body-parser");
 
@@ -42,34 +37,31 @@ function sendCard(req, res){
 	var cardTitle = 'test'
 	var cardSubTitle = 'test'
 	var buttonText = 'button';
-	client.connect();
-	client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-	  if (err) throw err;
-	  /*for (let row of res.rows) {
-		console.log(JSON.stringify(row));
-	  }*/
-	  buttonText = JSON.stringify(row);
-	  client.end();
+	pg.connect(connectionString, function(err, client, done) {
+	   client.query('SELECT table_schema,table_name FROM information_schema.tables', function(err, result) {
+			if(err) return console.error(err);
+			console.log(JSON.stringify(result.rows));
+			return res.json({
+				fulfillmentText: cardTitle,
+				fulfillmentMessages: [
+					{
+					  card: {
+						title: cardTitle,
+						subtitle: cardSubTitle,
+						imageUri: "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+						buttons: [
+						  {
+							text: buttonText,
+							postback: "https://assistant.google.com/"
+						  }
+						]
+					  }
+					}
+				],
+				source: "webhook-echo-sample"
+			}); 
+	   });
 	});
-	return res.json({
-    fulfillmentText: cardTitle,
-	fulfillmentMessages: [
-    {
-      card: {
-        title: cardTitle,
-        subtitle: cardSubTitle,
-        imageUri: "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
-        buttons: [
-          {
-            text: buttonText,
-            postback: "https://assistant.google.com/"
-          }
-        ]
-      }
-    }
-  ],
-    source: "webhook-echo-sample"
-  }); 
 }
 
 
