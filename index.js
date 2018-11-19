@@ -1,4 +1,10 @@
 "use strict";
+const { Client } = require('pg');
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -36,6 +42,15 @@ function sendCard(req, res){
 	var cardTitle = 'test'
 	var cardSubTitle = 'test'
 	var buttonText = 'button';
+	client.connect();
+	client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+	  if (err) throw err;
+	  /*for (let row of res.rows) {
+		console.log(JSON.stringify(row));
+	  }*/
+	  buttonText = JSON.stringify(row);
+	  client.end();
+	});
 	return res.json({
     fulfillmentText: cardTitle,
 	fulfillmentMessages: [
