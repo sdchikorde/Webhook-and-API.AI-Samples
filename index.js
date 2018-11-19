@@ -1,6 +1,6 @@
 "use strict";
 const pg = require('pg');
-const connectionString = "postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt?ssl=true";
+const connectionString = "postgres://zvcvhvet:x5Z4Ckk96wGPFfnYd7HaueGLkmeHHsoX@tantor.db.elephantsql.com:5432/zvcvhvet?ssl=true";
 const express = require("express");
 const bodyParser = require("body-parser");
 //if (process.env.DATABASE_URL) {
@@ -8,7 +8,7 @@ const bodyParser = require("body-parser");
 //}
 
 
-let connString = process.env.DATABASE_URL || 'postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt';
+let connString = 'postgres://zvcvhvet:x5Z4Ckk96wGPFfnYd7HaueGLkmeHHsoX@tantor.db.elephantsql.com:5432/zvcvhvet';//process.env.DATABASE_URL || 'postgres://yvqbkjfwvnsivz:2815ee936cbf48b4f1ac0371a32562a0e7524a14efd66ee65d42e2cddfa06d41@ec2-54-83-8-246.compute-1.amazonaws.com:5432/d7t8km65vgrgpt';
 const Pool = require('pg-pool');
 const url = require('url')
  
@@ -16,11 +16,11 @@ const params = url.parse(connString);
 const auth = params.auth.split(':');
  
 const config = {
-  user: auth[0],
-  password: auth[1],
-  host: params.hostname,
-  port: params.port,
-  database: params.pathname.split('/')[1],
+  user: 'zvcvhvet',
+  password: 'x5Z4Ckk96wGPFfnYd7HaueGLkmeHHsoX',
+  host: 'tantor.db.elephantsql.com',
+  port: '5432',
+  database: 'zvcvhvet',
   ssl: true
 };
  
